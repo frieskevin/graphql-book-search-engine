@@ -34,11 +34,22 @@ const resolvers = {
             if (context.user) {
                 const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { savedBooks: body } },
+                    { $addToSet: { savedBooks: args } },
                     { new: true }
                 );
                 return updatedUser
             }
+        },
+        removeBook: async (parent, args, context) => {
+            if (context.user) {
+                const removeBook = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: args } },
+                    { new: true }
+                );
+                return removeBook;
+            }
+            throw new AuthenticationError('No user with this ID')
         }
     }
 };
